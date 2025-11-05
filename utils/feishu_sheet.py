@@ -1,5 +1,5 @@
 import requests
-from config.settings import FEISHU_APP_ID, FEISHU_APP_SECRET, FEISHU_SHEET_TOKEN, FEISHU_SHEET_ID
+from config import FEISHU_APP_ID, FEISHU_APP_SECRET, FEISHU_SHEET_TOKEN, FEISHU_SHEET_ID
 
 
 class FeishuSheet:
