@@ -1,0 +1,43 @@
+# 敏感配置文件
+config.py
+nodes.py
+credentials/
+keys/
+
+# 环境变量文件
+.env
+.env.local
+.env.production
+
+# 数据文件
+data/
+*.csv
+*.json
+*.db
+*.sqlite
+
+# 日志文件
+logs/
+*.log
+
+# Python相关
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
