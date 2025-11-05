@@ -1,0 +1,7 @@
+# 飞书表格配置
+FEISHU_SHEET_TOKEN = "YGQcsTAcWhSsAbtDGNBchN8dnhd"
+FEISHU_SHEET_ID = "b459b5"
+
+# 还是需要飞书应用配置
+FEISHU_APP_ID = "cli_a980008eadf9100e"
+FEISHU_APP_SECRET = "AMe7kTXfRZZhw9HO6napph5TorW3pMfo"
