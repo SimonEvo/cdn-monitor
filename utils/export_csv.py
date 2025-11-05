@@ -44,4 +44,4 @@ def save_to_csv(nodes_data, date, filename):
         for node_data in existing_data.values():
             writer.writerow(node_data)
     
-    print(f"数据已更新: {filename}")
+    #print(f"数据已更新: {filename}")

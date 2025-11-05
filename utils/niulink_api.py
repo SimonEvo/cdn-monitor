@@ -36,11 +36,11 @@ class NiulinkAPI:
         }
         url = f"https://{self.host}{path}"
         
-        print(f"请求URL: {url}")
-        print(f"请求Body: {body_str}")
+        # print(f"请求URL: {url}")
+        # print(f"请求Body: {body_str}")
         
         response = requests.post(url, headers=headers, data=body_str)
-        print(f"原始响应: {response.text}")
+        # print(f"原始响应: {response.text}")
         
         return {
             'data': response.json(),

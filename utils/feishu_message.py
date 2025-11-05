@@ -73,7 +73,7 @@ def send_message(node_id, webhook, details, yesterday, miner):
     
         # 发送到飞书
         response = requests.post(webhook, json=feishu_message, timeout=10)
-        print(f"飞书发送结果: {response.status_code}")
+        # print(f"飞书发送结果: {response.status_code}")
         
     except Exception as e:
         print(f"执行出错: {str(e)}")
