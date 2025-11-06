@@ -1,5 +1,5 @@
 import requests
-from config import FEISHU_APP_ID, FEISHU_APP_SECRET, FEISHU_SHEET_TOKEN, FEISHU_SHEET_ID
+from config import *
 from datetime import datetime
 
 class FeishuSheet:
@@ -7,7 +7,6 @@ class FeishuSheet:
         self.app_id = FEISHU_APP_ID
         self.app_secret = FEISHU_APP_SECRET
         self.sheet_token = FEISHU_SHEET_TOKEN
-        self.sheet_id = FEISHU_SHEET_ID
         self.base_url = "https://open.feishu.cn/open-apis/sheets/v2/spreadsheets"
         
     def get_access_token(self):
@@ -43,14 +42,13 @@ class FeishuSheet:
                 data = response.json()
                 #print("✅ 表格连接成功!")
                 return "✅ 表格连接成功!"
-                sheets = data.get('data', {}).get('sheets', [])
             else:
                 return f"❌ 连接失败: {response.status_code}"
                 
         except Exception as e:
             return f"请求异常: {e}"
     
-    def get_sheet_data(self):
+    def get_sheet_data(self, miner):
         """动态扩展表格：节点为行，日期为列，日期自动排序"""
         token = self.get_access_token()
         if not token:
@@ -58,7 +56,10 @@ class FeishuSheet:
         
         headers = {'Authorization': f'Bearer {token}'}
         # 1. 读取整个表格
-        read_url = f"{self.base_url}/{self.sheet_token}/values/{self.sheet_id}"
+        sheet_id = nodes_dict[miner]["sheet"]
+        
+        
+        read_url = f"{self.base_url}/{self.sheet_token}/values/{sheet_id}"
         read_response = requests.get(read_url, headers=headers)
         
         if read_response.status_code != 200:
@@ -81,11 +82,12 @@ class FeishuSheet:
             # 新表格：直接创建
             header = ["节点名称", new_date]
             values = [header]
-            for node_name, data in nodes_data.items():
-                values.append([node_name, data['settle']])
-            return values
+            # for node_name, data in nodes_data.items():
+            #     values.append([node_name, data['settle']])
+            return values, nodes_data
         
-        # 提取表头（第一行）
+
+
         header_row = current_data[0]  # ['节点名称', '2025年11月04日', ...]
         data_rows = current_data[1:]  # 剩下的数据行
         
@@ -95,7 +97,7 @@ class FeishuSheet:
         # 添加新日期（如果不存在）
         if new_date not in date_columns:
             date_columns.append(new_date)
-        
+        print("works")
         # 日期排序（转换后排序）
         def convert_date(date_str):
             try:
@@ -157,13 +159,12 @@ class FeishuSheet:
             new_data_rows.append(new_row)
 
         
-        #print(new_data_rows)
         
         return [new_header], new_data_rows
     
 
 
-    def replace_table_data(self, new_header, nodes_data):
+    def replace_table_data(self, new_header, nodes_data, miner):
         """清空表格并填入新数据"""
         token = self.get_access_token()
         if not token:
@@ -172,20 +173,21 @@ class FeishuSheet:
         headers = {'Authorization': f'Bearer {token}'}
         # 构建新表格数据
         values = new_header  # 表头
-        
+        # print(nodes_data)
         values.extend(nodes_data)
     
         
         # 直接覆盖整个表格
+        sheet_id = nodes_dict[miner]["sheet"]
         url = f"{self.base_url}/{self.sheet_token}/values"
         payload = {
             "valueRange": {
-                "range": f"{self.sheet_id}",  # 覆盖大范围确保清空
+                "range": f"{sheet_id}",  # 覆盖大范围确保清空
                 "values": values
             }
         }
         
-        #print(f"清空并写入数据: {values}")
+        # print(f"清空并写入数据: {values}")
         response = requests.put(url, headers=headers, json=payload)
-        #print(f"清空写入响应: {response.status_code}")
+        # print(f"清空写入响应: {response.status_code}")
         return response.json()
